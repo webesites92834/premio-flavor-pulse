@@ -150,6 +150,10 @@ All colors MUST be HSL.
     @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
   }
 
+  .btn-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
   .card-mexican {
     @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 p-6;
   }
@@ -175,6 +179,15 @@ All colors MUST be HSL.
     animation: slide-in-right 0.6s ease-out forwards;
     opacity: 0;
     transform: translateX(50px);
+  }
+
+  .animate-ticker {
+    animation: ticker 20s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 }
 

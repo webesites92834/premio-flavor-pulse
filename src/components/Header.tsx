@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,38 +46,38 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <button 
-              onClick={() => scrollToSection('hero')}
+            <Link 
+              to="/"
               className={`font-medium transition-colors hover:text-primary ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               Home
-            </button>
-            <button 
-              onClick={() => scrollToSection('menu')}
+            </Link>
+            <Link 
+              to="/menu"
               className={`font-medium transition-colors hover:text-primary ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               Menu
-            </button>
-            <button 
-              onClick={() => scrollToSection('about')}
+            </Link>
+            <Link 
+              to="/about"
               className={`font-medium transition-colors hover:text-primary ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               About
-            </button>
-            <button 
-              onClick={() => scrollToSection('location')}
+            </Link>
+            <Link 
+              to="/visit"
               className={`font-medium transition-colors hover:text-primary ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               Visit Us
-            </button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -94,30 +95,34 @@ const Header = () => {
         {isMobileMenuOpen && (
           <nav className="md:hidden mt-4 py-4 bg-white rounded-lg shadow-lg">
             <div className="flex flex-col space-y-4 px-4">
-              <button 
-                onClick={() => scrollToSection('hero')}
+              <Link 
+                to="/"
                 className="text-left font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
-              </button>
-              <button 
-                onClick={() => scrollToSection('menu')}
+              </Link>
+              <Link 
+                to="/menu"
                 className="text-left font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Menu
-              </button>
-              <button 
-                onClick={() => scrollToSection('about')}
+              </Link>
+              <Link 
+                to="/about"
                 className="text-left font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 About
-              </button>
-              <button 
-                onClick={() => scrollToSection('location')}
+              </Link>
+              <Link 
+                to="/visit"
                 className="text-left font-medium text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Visit Us
-              </button>
+              </Link>
             </div>
           </nav>
         )}

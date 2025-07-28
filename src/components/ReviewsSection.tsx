@@ -72,45 +72,90 @@ const ReviewsSection = () => {
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-6"></div>
         </div>
 
-        {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review, index) => (
-            <div 
-              key={index}
-              className={`card-mexican relative ${isVisible ? 'animate-fade-in-up' : ''}`}
-              style={{animationDelay: `${index * 0.2}s`}}
-            >
-              {/* Quote Icon */}
-              <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                <Quote className="w-4 h-4 text-white" />
-              </div>
+        {/* Horizontal Ticker Reviews */}
+        <div className="relative overflow-hidden">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10"></div>
+          
+          {/* Ticker container */}
+          <div className="flex animate-ticker space-x-8">
+            {/* First set of reviews */}
+            {reviews.map((review, index) => (
+              <div 
+                key={`first-${index}`}
+                className="flex-shrink-0 w-80 card-mexican relative"
+              >
+                {/* Quote Icon */}
+                <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+                  <Quote className="w-4 h-4 text-white" />
+                </div>
 
-              {/* Rating */}
-              <div className="flex items-center space-x-1 mb-4">
-                {renderStars(review.rating)}
-              </div>
+                {/* Rating */}
+                <div className="flex items-center space-x-1 mb-4">
+                  {renderStars(review.rating)}
+                </div>
 
-              {/* Review Text */}
-              <p className="text-muted-foreground leading-relaxed mb-6 italic">
-                "{review.review}"
-              </p>
+                {/* Review Text */}
+                <p className="text-muted-foreground leading-relaxed mb-6 italic">
+                  "{review.review}"
+                </p>
 
-              {/* Reviewer Info */}
-              <div className="border-t pt-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-foreground">{review.name}</p>
-                    <p className="text-sm text-muted-foreground">{review.date}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
-                    <span className="text-primary font-bold text-lg">
-                      {review.name.split(' ').map(n => n[0]).join('')}
-                    </span>
+                {/* Reviewer Info */}
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-foreground">{review.name}</p>
+                      <p className="text-sm text-muted-foreground">{review.date}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">
+                        {review.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+            
+            {/* Duplicate set for seamless loop */}
+            {reviews.map((review, index) => (
+              <div 
+                key={`second-${index}`}
+                className="flex-shrink-0 w-80 card-mexican relative"
+              >
+                {/* Quote Icon */}
+                <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+                  <Quote className="w-4 h-4 text-white" />
+                </div>
+
+                {/* Rating */}
+                <div className="flex items-center space-x-1 mb-4">
+                  {renderStars(review.rating)}
+                </div>
+
+                {/* Review Text */}
+                <p className="text-muted-foreground leading-relaxed mb-6 italic">
+                  "{review.review}"
+                </p>
+
+                {/* Reviewer Info */}
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-foreground">{review.name}</p>
+                      <p className="text-sm text-muted-foreground">{review.date}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
+                      <span className="text-primary font-bold text-lg">
+                        {review.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Overall Rating Summary */}
