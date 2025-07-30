@@ -75,16 +75,16 @@ const ReviewsSection = () => {
         {/* Horizontal Ticker Reviews */}
         <div className="relative overflow-hidden">
           {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10"></div>
           
           {/* Ticker container */}
-          <div className="flex animate-ticker space-x-8">
+          <div className="flex animate-ticker-smooth space-x-6">
             {/* First set of reviews */}
             {reviews.map((review, index) => (
               <div 
                 key={`first-${index}`}
-                className="flex-shrink-0 w-80 card-mexican relative"
+                className="flex-shrink-0 w-72 md:w-80 lg:w-96 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative transition-transform hover:scale-105"
               >
                 {/* Quote Icon */}
                 <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
@@ -122,7 +122,7 @@ const ReviewsSection = () => {
             {reviews.map((review, index) => (
               <div 
                 key={`second-${index}`}
-                className="flex-shrink-0 w-80 card-mexican relative"
+                className="flex-shrink-0 w-72 md:w-80 lg:w-96 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative transition-transform hover:scale-105"
               >
                 {/* Quote Icon */}
                 <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">

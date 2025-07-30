@@ -236,7 +236,20 @@ const Chatbot = () => {
                       {message.type === 'user' && (
                         <User className="w-4 h-4 mt-0.5 flex-shrink-0" />
                       )}
-                      <p className="text-sm leading-relaxed">{message.content}</p>
+                       <div className="text-sm leading-relaxed whitespace-pre-wrap" dangerouslySetInnerHTML={{
+                         __html: message.content
+                           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                           .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                           .replace(/### (.*?)\n/g, '<h4 class="font-semibold text-primary mt-3 mb-2">$1</h4>')
+                           .replace(/## (.*?)\n/g, '<h3 class="font-bold text-primary mt-4 mb-2">$1</h3>')
+                           .replace(/# (.*?)\n/g, '<h2 class="font-bold text-lg text-primary mt-4 mb-3">$1</h2>')
+                           .replace(/\n• /g, '<br/>• ')
+                           .replace(/\n\* /g, '<br/>• ')
+                           .replace(/\$(\d+\.\d+)/g, '<span class="font-semibold text-green-600">$$$1</span>')
+                           .replace(/🌮|🌯|🍲|🥤|🍹|🥪|📍|📞|⏰|💰/g, '<span class="text-lg">$&</span>')
+                           .replace(/\n\n/g, '<br/><br/>')
+                           .replace(/\n/g, '<br/>')
+                       }} />
                     </div>
                   </div>
                 </div>
