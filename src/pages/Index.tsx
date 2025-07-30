@@ -7,6 +7,7 @@ import MenuSection from '../components/MenuSection';
 import LocationSection from '../components/LocationSection';
 import ReviewsSection from '../components/ReviewsSection';
 import Footer from '../components/Footer';
+import Chatbot from '../components/Chatbot';
 
 const Index = () => {
   useEffect(() => {
@@ -28,6 +29,7 @@ const Index = () => {
       <LocationSection />
       <ReviewsSection />
       <Footer />
+      <Chatbot />
     </div>
   );
 };

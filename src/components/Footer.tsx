@@ -1,9 +1,35 @@
 import React from 'react';
 import { MapPin, Phone, Clock, Heart } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigation = (path: string, sectionId?: string) => {
+    if (location.pathname === path) {
+      // If we're already on the page, scroll to section
+      if (sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        scrollToTop();
+      }
+    } else {
+      // Navigate to the page
+      navigate(path);
+      // If there's a section, scroll to it after navigation
+      if (sectionId) {
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
   };
 
   return (
@@ -72,37 +98,25 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
             <div className="space-y-3">
               <button 
-                onClick={() => {
-                  const element = document.getElementById('hero');
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigation('/', 'hero')}
                 className="block text-white/90 hover:text-white transition-colors"
               >
                 Home
               </button>
               <button 
-                onClick={() => {
-                  const element = document.getElementById('menu');
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigation('/menu')}
                 className="block text-white/90 hover:text-white transition-colors"
               >
                 Menu
               </button>
               <button 
-                onClick={() => {
-                  const element = document.getElementById('about');
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigation('/about')}
                 className="block text-white/90 hover:text-white transition-colors"
               >
                 About Us
               </button>
               <button 
-                onClick={() => {
-                  const element = document.getElementById('location');
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigation('/visit')}
                 className="block text-white/90 hover:text-white transition-colors"
               >
                 Visit Us

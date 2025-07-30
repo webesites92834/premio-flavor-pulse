@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Chatbot from '../components/Chatbot';
 import { ArrowLeft, Heart, Users, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import storefrontImage from '../assets/restaurant-storefront.jpg';
@@ -203,6 +204,7 @@ const About = () => {
       </section>
 
       <Footer />
+      <Chatbot />
     </div>
   );
 };
