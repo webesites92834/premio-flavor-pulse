@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { GoogleGenAI } from '@google/genai';
 
 interface Message {
   id: string;
@@ -11,97 +12,114 @@ interface Message {
   timestamp: Date;
 }
 
-const RESTAURANT_KNOWLEDGE = {
-  name: "Taqueria El Premio Mayor",
-  hours: "Monday - Sunday: 9:00 AM - 9:00 PM",
-  phone: "(559) 227-7281",
-  address: "3141 N Maroa Ave, Fresno, CA 93704 (Shield & Maroa)",
-  priceRange: "$10-$20 per person",
-  established: "Since 1996",
-  specialties: ["quesatacos", "burritos", "tacos", "tortas", "aguas frescas", "menudo"],
-  menu: {
-    tacos: ["Asada ($2.50)", "Adobada ($2.50)", "Cabeza ($2.50)", "Pollo ($2.50)", "Lengua ($3.50)", "Tripa ($2.75)", "Chile Verde ($2.75)", "Carnitas ($2.75)"],
-    burritos: ["Burrito ($8.99)", "Burrito Supreme ($9.99)", "Wet Burrito ($11.99)", "Bacon Wrap Burrito ($8.99)", "Breakfast Burrito ($8.99)"],
-    tortas: ["Asada/Adobada/Pollo/Jamon/Hawaiian/Lomo ($9.99)", "Pierna/Milanesa/Cubana ($10.99)", "Milanesa & Cubana Mixta ($12.99)"],
-    drinks: ["Jarritos ($2.99)", "Coca-Cola/Fanta 1.5L ($4.50)", "Soda Can ($1.98)", "Aguas Frescas Regular ($3.50)", "Aguas Frescas Large ($4.50)"],
-    menudo: ["Chico/Small ($10.29)", "Grande/Large ($12.99)"]
-  },
-  features: ["No reservations needed", "Walk-ins welcome", "Fresh ingredients daily", "Authentic Mexican flavors", "Family-owned", "Community favorite"]
-};
+const RESTAURANT_KNOWLEDGE = `
+You are **PremioBot**, a helpful and knowledgeable chatbot assistant specifically trained on the information from the website **Taqueria El Premio Mayor**.
 
-const generateResponse = (userMessage: string): string => {
-  const message = userMessage.toLowerCase();
-  
-  // Greetings
-  if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-    return `¡Hola! Welcome to ${RESTAURANT_KNOWLEDGE.name}! I'm here to help you with any questions about our authentic Mexican food, menu, hours, or location. What would you like to know?`;
+Your main goal is to answer user questions accurately using ONLY the information provided about **Taqueria El Premio Mayor** and related content given.
+
+### Guidelines for response:
+
+1. **Always answer based on the provided information** about Taqueria El Premio Mayor. Use the description, history, products/services, founder info, and other details exactly as given.
+
+2. If a user asks a question NOT related to Taqueria El Premio Mayor or its domain (e.g., general food facts, other restaurants, etc.), politely respond:
+   **"Sorry, I currently don't have information about that."**
+
+3. Your replies should be:
+   * Clear, concise, and informative.
+   * Grammatically correct, using proper spelling and punctuation.
+   * Polite and professional, while maintaining an engaging and friendly tone.
+
+4. If you are asked a question that cannot be answered from the given information (e.g., "Do they offer delivery?" when it's not stated), respond with:
+   **"I'm sorry, that detail is not available right now, but I'm here to help with other questions about Taqueria El Premio Mayor."**
+
+### Provided Website Information:
+
+* **Website Name:** Taqueria El Premio Mayor
+
+* **Description:**
+  A family-owned taqueria located in Fresno, California, serving authentic Mexican street food made fresh daily with love and tradition since 1996.
+
+* **Founded by:** Not specifically mentioned by name, but it's a family-owned establishment founded in **1996**.
+
+* **Core Business:**
+  Serving a wide range of traditional Mexican street food including tacos, burritos, tortas, aguas frescas, menudo, and more. Everything is prepared fresh daily using high-quality, locally sourced ingredients and recipes passed down through generations.
+
+* **Menu Highlights:**
+  * **Tacos** ($2.50–$3.50): Asada, Adobada, Cabeza, Pollo, Lengua, Tripa, Chile Verde, Carnitas
+  * **Burritos** ($8.99–$11.99): Classic, Supreme, Wet, Bacon Wrap, Breakfast
+  * **Tortas** ($9.99–$12.99): Options like Asada, Pollo, Milanesa, Jamon, and more
+  * **Menudo**: Small ($10.29), Large ($12.99)
+  * **Aguas Frescas**: Regular ($3.50), Large ($4.50)
+  * **Drinks**: Jarritos ($2.99), Coca-Cola/Fanta 1.5L ($4.50), Soda Can ($1.98)
+
+* **Store Info:**
+  * **Location:** 3141 N Maroa Ave, Fresno, CA 93704 (Shield & Maroa)
+  * **Hours:** Open daily, 9:00 AM – 9:00 PM
+  * **Contact:** (559) 227-7281
+  * **Price Range:** $10–$20 per person
+  * **Walk-ins welcome**
+  * **Payments:** Cash and Card
+  * **Parking:** Free on-site
+  * **Accessibility:** Wheelchair accessible
+
+* **Why Locals Love It:**
+  * Authentic flavor and family legacy
+  * Fast service and friendly environment
+  * Affordable pricing and generous portions
+  * Community-first mindset
+  * Fresh, locally sourced ingredients
+  * Open 7 days a week
+
+* **Mission & Values:**
+  * Authentic Mexican recipes passed down through generations
+  * Community-first approach, welcoming every guest like family
+  * Consistent quality with every dish made fresh daily
+  * Bringing people together through food and tradition
+
+* **Tagline:**
+  **"Flavor That Speaks for Itself."**
+
+* **Additional Notes:**
+  * Located in the heart of the Shield & Maroa area in Fresno, CA
+  * No reservations required — just come in and enjoy
+
+Remember: Never provide information beyond what is given here. If you are uncertain or the question is off-topic, use polite fallback responses.
+`;
+
+// Initialize Gemini AI
+const ai = new GoogleGenAI({
+  apiKey: 'AIzaSyCWW5o9YmHLL9szRBvO3MDJ_D0JT1POWvI',
+});
+
+const generateResponse = async (userMessage: string): Promise<string> => {
+  try {
+    const contents = [
+      {
+        role: 'user',
+        parts: [
+          {
+            text: `${RESTAURANT_KNOWLEDGE}\n\nUser question: ${userMessage}`,
+          },
+        ],
+      },
+    ];
+
+    const response = await ai.models.generateContentStream({
+      model: 'gemma-3n-e2b-it',
+      config: {},
+      contents,
+    });
+
+    let fullResponse = '';
+    for await (const chunk of response) {
+      fullResponse += chunk.text;
+    }
+
+    return fullResponse || "I'm here to help you with questions about Taqueria El Premio Mayor. What would you like to know?";
+  } catch (error) {
+    console.error('Error generating response:', error);
+    return "I'm sorry, I'm having trouble responding right now. Please try again or call us at (559) 227-7281 for immediate assistance!";
   }
-  
-  // Hours
-  if (message.includes('hour') || message.includes('open') || message.includes('close') || message.includes('time')) {
-    return `We're open ${RESTAURANT_KNOWLEDGE.hours}. We're here every day of the week to serve you delicious Mexican food!`;
-  }
-  
-  // Location/Address
-  if (message.includes('location') || message.includes('address') || message.includes('where') || message.includes('direction')) {
-    return `You can find us at ${RESTAURANT_KNOWLEDGE.address}. We're located at the Shield & Maroa intersection. Need directions? Just call us at ${RESTAURANT_KNOWLEDGE.phone}!`;
-  }
-  
-  // Phone
-  if (message.includes('phone') || message.includes('call') || message.includes('number')) {
-    return `You can call us at ${RESTAURANT_KNOWLEDGE.phone}. We're always happy to help with orders or answer questions!`;
-  }
-  
-  // Menu - General
-  if (message.includes('menu') && !message.includes('taco') && !message.includes('burrito')) {
-    return `Our menu features authentic Mexican favorites! We have tacos, burritos, tortas, aguas frescas, and menudo. Our specialties include our famous quesatacos! What specific item would you like to know about?`;
-  }
-  
-  // Tacos
-  if (message.includes('taco')) {
-    const tacoList = RESTAURANT_KNOWLEDGE.menu.tacos.join(', ');
-    return `Our delicious tacos include: ${tacoList}. All made fresh with authentic flavors! Our most popular are the Asada and Adobada.`;
-  }
-  
-  // Burritos
-  if (message.includes('burrito')) {
-    const burritoList = RESTAURANT_KNOWLEDGE.menu.burritos.join(', ');
-    return `Our hearty burritos include: ${burritoList}. All are big, bold, and fully loaded with fresh ingredients!`;
-  }
-  
-  // Drinks
-  if (message.includes('drink') || message.includes('agua') || message.includes('fresca') || message.includes('beverage')) {
-    const drinkList = RESTAURANT_KNOWLEDGE.menu.drinks.join(', ');
-    return `We have refreshing drinks including: ${drinkList}. Our aguas frescas are traditional and made fresh daily!`;
-  }
-  
-  // Price
-  if (message.includes('price') || message.includes('cost') || message.includes('expensive') || message.includes('cheap')) {
-    return `Our prices are very affordable! Most meals range from ${RESTAURANT_KNOWLEDGE.priceRange}. We believe in providing great value for authentic, quality Mexican food.`;
-  }
-  
-  // Reservations
-  if (message.includes('reservation') || message.includes('book') || message.includes('table')) {
-    return `No reservations needed! We welcome walk-ins and are here to serve you when you're ready. Just come on in and we'll take great care of you!`;
-  }
-  
-  // About
-  if (message.includes('about') || message.includes('story') || message.includes('history')) {
-    return `${RESTAURANT_KNOWLEDGE.name} has been serving authentic Mexican flavors ${RESTAURANT_KNOWLEDGE.established}. We're a family-owned taqueria committed to fresh ingredients, traditional recipes, and being part of the Fresno community.`;
-  }
-  
-  // Specialties
-  if (message.includes('special') || message.includes('recommend') || message.includes('popular') || message.includes('famous')) {
-    return `Our specialties include our famous quesatacos, carne asada tacos, and hearty burritos! We're also known for our fresh aguas frescas and weekend menudo. Everything is made with love and authentic Mexican tradition!`;
-  }
-  
-  // Thanks
-  if (message.includes('thank') || message.includes('gracias')) {
-    return `¡De nada! Thank you for your interest in ${RESTAURANT_KNOWLEDGE.name}. We can't wait to serve you authentic Mexican food made with love. Come visit us soon!`;
-  }
-  
-  // Default response
-  return `I'd love to help you learn more about ${RESTAURANT_KNOWLEDGE.name}! You can ask me about our menu, hours, location, prices, or anything else. We're here ${RESTAURANT_KNOWLEDGE.hours} at ${RESTAURANT_KNOWLEDGE.address}. What would you like to know?`;
 };
 
 const Chatbot = () => {
@@ -110,7 +128,7 @@ const Chatbot = () => {
     {
       id: '1',
       type: 'bot',
-      content: `¡Hola! Welcome to ${RESTAURANT_KNOWLEDGE.name}! I'm here to help you with questions about our authentic Mexican food, menu, hours, or location. What can I help you with today?`,
+      content: '¡Hola! Welcome to Taqueria El Premio Mayor! I\'m PremioBot, here to help you with questions about our authentic Mexican food, menu, hours, or location. What can I help you with today?',
       timestamp: new Date()
     }
   ]);
@@ -126,7 +144,7 @@ const Chatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
@@ -140,18 +158,29 @@ const Chatbot = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate bot thinking time
-    setTimeout(() => {
+    try {
+      const responseContent = await generateResponse(userMessage.content);
+      
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: generateResponse(userMessage.content),
+        content: responseContent,
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error('Error getting response:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        content: "I'm sorry, I'm having trouble responding right now. Please try again or call us at (559) 227-7281!",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1500); // Random delay between 1-2.5 seconds
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -232,21 +261,24 @@ const Chatbot = () => {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t">
-            <div className="flex space-x-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask about our menu, hours, location..."
-                className="flex-1 text-sm"
-                disabled={isTyping}
-              />
+          <div className="p-3 border-t bg-gray-50">
+            <div className="flex items-end space-x-2">
+              <div className="flex-1">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ask about our menu, hours, location..."
+                  className="text-sm border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary"
+                  disabled={isTyping}
+                  maxLength={500}
+                />
+              </div>
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputValue.trim() || isTyping}
                 size="icon"
-                className="bg-primary hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 flex-shrink-0 h-10 w-10"
               >
                 <Send className="w-4 h-4" />
               </Button>
