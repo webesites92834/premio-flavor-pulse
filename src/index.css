@@ -190,7 +190,7 @@ All colors MUST be HSL.
   }
 
   .animate-ticker-infinite {
-    animation: ticker-infinite 30s linear infinite;
+    animation: ticker-infinite 40s linear infinite;
   }
 
   @keyframes ticker {

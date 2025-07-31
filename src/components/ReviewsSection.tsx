@@ -99,7 +99,7 @@ const ReviewsSection = () => {
 
                 {/* Review Text */}
                 <p className="text-muted-foreground leading-relaxed mb-6 italic">
-                  "{review.review}"
+                  {review.review}
                 </p>
 
                 {/* Reviewer Info */}
@@ -138,7 +138,7 @@ const ReviewsSection = () => {
 
                 {/* Review Text */}
                 <p className="text-muted-foreground leading-relaxed mb-6 italic">
-                  "{review.review}"
+                  {review.review}
                 </p>
 
                 {/* Reviewer Info */}
