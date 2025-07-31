@@ -112,9 +112,14 @@ const generateResponse = async (userMessage: string): Promise<string> => {
 
     let fullResponse = '';
     for await (const chunk of response) {
-      fullResponse += chunk.text;
+      if (chunk.text && chunk.text !== 'undefined') {
+        fullResponse += chunk.text;
+      }
     }
 
+    // Clean up any trailing undefined or empty content
+    fullResponse = fullResponse.replace(/undefined\s*$/, '').trim();
+    
     return fullResponse || "I'm here to help you with questions about Taqueria El Premio Mayor. What would you like to know?";
   } catch (error) {
     console.error('Error generating response:', error);
@@ -194,7 +199,7 @@ const Chatbot = () => {
     <div className="fixed bottom-4 right-4 z-50">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-80 md:w-96 h-96 bg-white border border-gray-200 rounded-lg shadow-xl animate-in slide-in-from-bottom-4 duration-300">
+        <div className="mb-4 w-80 md:w-96 h-96 bg-white border border-gray-200 rounded-lg shadow-xl animate-scale-in">
           {/* Header */}
           <div className="flex items-center justify-between p-4 bg-primary text-white rounded-t-lg">
             <div className="flex items-center space-x-2">
@@ -304,7 +309,7 @@ const Chatbot = () => {
       <Button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-12 h-12 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg transition-all duration-300 ${
-          isOpen ? 'rotate-180' : 'hover:scale-110'
+          isOpen ? 'rotate-45' : 'hover:scale-110'
         }`}
         size="icon"
       >
