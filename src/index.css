@@ -189,6 +189,10 @@ All colors MUST be HSL.
     animation: ticker-smooth 40s linear infinite;
   }
 
+  .animate-ticker-infinite {
+    animation: ticker-infinite 30s linear infinite;
+  }
+
   @keyframes ticker {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -197,6 +201,11 @@ All colors MUST be HSL.
   @keyframes ticker-smooth {
     0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
+  }
+
+  @keyframes ticker-infinite {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
   }
 
   /* Enhanced Animations */

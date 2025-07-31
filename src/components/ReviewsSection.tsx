@@ -74,17 +74,18 @@ const ReviewsSection = () => {
 
         {/* Horizontal Ticker Reviews */}
         <div className="relative overflow-hidden">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10"></div>
+          {/* Enhanced Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background via-background/90 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background via-background/90 to-transparent z-10 pointer-events-none"></div>
           
-          {/* Ticker container */}
-          <div className="flex animate-ticker-smooth space-x-6">
+          {/* Ticker container with improved animation */}
+          <div className="flex animate-ticker-infinite space-x-6 will-change-transform">
             {/* First set of reviews */}
             {reviews.map((review, index) => (
               <div 
                 key={`first-${index}`}
-                className="flex-shrink-0 w-72 md:w-80 lg:w-96 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative transition-transform hover:scale-105"
+                className="flex-shrink-0 w-80 md:w-96 bg-white border border-gray-200 p-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                style={{ borderRadius: '8px' }}
               >
                 {/* Quote Icon */}
                 <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
@@ -122,7 +123,8 @@ const ReviewsSection = () => {
             {reviews.map((review, index) => (
               <div 
                 key={`second-${index}`}
-                className="flex-shrink-0 w-72 md:w-80 lg:w-96 bg-white rounded-2xl shadow-lg border border-gray-100 p-6 relative transition-transform hover:scale-105"
+                className="flex-shrink-0 w-80 md:w-96 bg-white border border-gray-200 p-6 relative transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                style={{ borderRadius: '8px' }}
               >
                 {/* Quote Icon */}
                 <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
